@@ -4,39 +4,37 @@
 
 :root {
   font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  color-scheme: dark;
-}
+  @tailwind base;
+  @tailwind components;
+  @tailwind utilities;
 
-body {
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
-  background-color: #111827; /* gray-900 */
-}
+  :root {
+    font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+    color-scheme: dark;
+  }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
+  @layer base {
+    body {
+      @apply bg-gray-50 text-gray-900 antialiased;
+    }
+  }
 
-::-webkit-scrollbar-track {
-  background: #1f2937; 
-}
+  /* Custom Scrollbar for Webkit browsers */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
 
-::-webkit-scrollbar-thumb {
-  background: #4b5563; 
-  border-radius: 4px;
-}
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-100;
+  }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #6b7280; 
-}
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 rounded-full hover:bg-gray-400 transition-colors;
+  }
 
-/* Smooth transitions */
-* {
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
-}
+  /* Smooth transitions */
+  * {
+    @apply transition-colors duration-200;
+  }

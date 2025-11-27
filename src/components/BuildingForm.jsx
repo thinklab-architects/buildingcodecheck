@@ -2,15 +2,15 @@ import React from 'react';
 import { Building2, Leaf, Trash2, Droplets, Bike, ArrowUpFromLine, Lightbulb, Grid } from 'lucide-react';
 
 const SectionHeader = ({ icon: Icon, title }) => (
-    <div className="flex items-center gap-2 mb-4 pb-2 border-b border-white/10">
-        <Icon className="w-5 h-5 text-emerald-400" />
-        <h3 className="text-lg font-semibold text-white">{title}</h3>
+    <div className="flex items-center gap-2 mb-4 pb-2 border-b border-gray-100">
+        <Icon className="w-5 h-5 text-emerald-600" />
+        <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
     </div>
 );
 
 const InputGroup = ({ label, children, subLabel }) => (
     <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-300 mb-1">
+        <label className="block text-sm font-medium text-gray-700 mb-1">
             {label}
             {subLabel && <span className="text-xs text-gray-500 ml-2">({subLabel})</span>}
         </label>
@@ -19,14 +19,14 @@ const InputGroup = ({ label, children, subLabel }) => (
 );
 
 const Checkbox = ({ label, checked, onChange }) => (
-    <label className="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 cursor-pointer transition-colors">
+    <label className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-all ${checked ? 'bg-emerald-50 border-emerald-200' : 'bg-gray-50 border-transparent hover:bg-gray-100'}`}>
         <input
             type="checkbox"
             checked={checked}
             onChange={(e) => onChange(e.target.checked)}
-            className="w-5 h-5 rounded border-gray-600 text-emerald-500 focus:ring-emerald-500 bg-gray-700"
+            className="w-5 h-5 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500 bg-white"
         />
-        <span className="text-sm text-gray-200">{label}</span>
+        <span className={`text-sm ${checked ? 'text-emerald-900 font-medium' : 'text-gray-700'}`}>{label}</span>
     </label>
 );
 
@@ -36,7 +36,7 @@ const NumberInput = ({ value, onChange, placeholder, unit }) => (
             type="number"
             value={value}
             onChange={(e) => onChange(parseFloat(e.target.value) || 0)}
-            className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all"
+            className="w-full bg-white border border-gray-300 rounded-lg px-4 py-2 text-gray-900 focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none transition-all placeholder-gray-400"
             placeholder={placeholder}
         />
         {unit && (
@@ -63,11 +63,11 @@ export default function BuildingForm({ data, onChange }) {
     };
 
     return (
-        <div className="space-y-8">
+        <div className="space-y-6">
             {/* Basic Info */}
-            <div className="bg-gray-900/50 backdrop-blur-sm p-6 rounded-xl border border-white/10">
+            <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
                 <SectionHeader icon={Building2} title="基本資料" />
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <Checkbox
                         label="是否為新建建築"
                         checked={data.isNew}
@@ -110,7 +110,7 @@ export default function BuildingForm({ data, onChange }) {
                     />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
                     <InputGroup label="工程造價">
                         <NumberInput
                             value={data.constructionCostNTD}
@@ -143,9 +143,9 @@ export default function BuildingForm({ data, onChange }) {
             </div>
 
             {/* Roof */}
-            <div className="bg-gray-900/50 backdrop-blur-sm p-6 rounded-xl border border-white/10">
+            <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
                 <SectionHeader icon={ArrowUpFromLine} title="屋頂相關" />
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
                     <Checkbox
                         label="是否有隔熱層"
                         checked={data.roof.hasInsulationLayer}
@@ -199,9 +199,9 @@ export default function BuildingForm({ data, onChange }) {
             </div>
 
             {/* Waste */}
-            <div className="bg-gray-900/50 backdrop-blur-sm p-6 rounded-xl border border-white/10">
+            <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
                 <SectionHeader icon={Trash2} title="垃圾設施" />
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
                     <Checkbox
                         label="設置垃圾處理設施"
                         checked={data.waste.hasFacility}
@@ -252,9 +252,9 @@ export default function BuildingForm({ data, onChange }) {
             </div>
 
             {/* Water Saving */}
-            <div className="bg-gray-900/50 backdrop-blur-sm p-6 rounded-xl border border-white/10">
+            <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
                 <SectionHeader icon={Droplets} title="省水設備" />
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <Checkbox
                         label="省水標章便器"
                         checked={data.waterSaving.allToiletsWaterSavingCertified}
@@ -269,7 +269,7 @@ export default function BuildingForm({ data, onChange }) {
             </div>
 
             {/* Materials */}
-            <div className="bg-gray-900/50 backdrop-blur-sm p-6 rounded-xl border border-white/10">
+            <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
                 <SectionHeader icon={Leaf} title="綠建材" />
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <InputGroup label="綠建材面積">
@@ -290,9 +290,9 @@ export default function BuildingForm({ data, onChange }) {
             </div>
 
             {/* Bike Parking */}
-            <div className="bg-gray-900/50 backdrop-blur-sm p-6 rounded-xl border border-white/10">
+            <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
                 <SectionHeader icon={Bike} title="自行車停車" />
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
                     <Checkbox
                         label="設置自行車停車空間"
                         checked={data.bikeParking.hasBikeParking}
@@ -332,9 +332,9 @@ export default function BuildingForm({ data, onChange }) {
             </div>
 
             {/* Lifts */}
-            <div className="bg-gray-900/50 backdrop-blur-sm p-6 rounded-xl border border-white/10">
+            <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
                 <SectionHeader icon={ArrowUpFromLine} title="電梯" />
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
                     <Checkbox
                         label="建築技術規則要求設置電梯"
                         checked={data.lifts.requiredByCode}
@@ -363,9 +363,9 @@ export default function BuildingForm({ data, onChange }) {
             </div>
 
             {/* Lighting & Paving */}
-            <div className="bg-gray-900/50 backdrop-blur-sm p-6 rounded-xl border border-white/10">
+            <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
                 <SectionHeader icon={Lightbulb} title="其他 (照明/鋪面)" />
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <Checkbox
                         label="使用高耗能燈具 (舊有建築裝修)"
                         checked={data.lighting.usesHighPowerLuminaires}
