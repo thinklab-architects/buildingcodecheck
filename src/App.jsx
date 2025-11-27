@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import BuildingForm from './components/BuildingForm';
 import ComplianceResult from './components/ComplianceResult';
 import { checkGreenBuildingCompliance, defaultBuildingData } from './utils/greenBuildingLogic';
+import { Building2 } from 'lucide-react';
 
 function App() {
   const [buildingData, setBuildingData] = useState(defaultBuildingData);
@@ -13,44 +14,55 @@ function App() {
   }, [buildingData]);
 
   return (
-    <div className="min-h-screen pb-12">
-      {/* Hero Section */}
-      <div className="bg-white border-b border-gray-200 pt-16 pb-12 mb-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl">
-            <p className="text-emerald-600 font-bold tracking-[0.2em] text-sm uppercase mb-3">
-              ThinkLab Code Check
-            </p>
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 tracking-tight">
-              屏東縣綠建築自治條例檢核
-            </h1>
-            <p className="text-xl text-gray-500 leading-relaxed">
-              自動化建築法規檢核系統，協助建築師快速評估專案合規性。
-            </p>
+    <div className="page-shell">
+      {/* Header */}
+      <header className="app-header">
+        <div className="app-header__title-block">
+          <div className="app-logo">
+            <Building2 size={20} />
+          </div>
+          <div className="app-title-text">
+            <h1>屏東縣綠建築自治條例檢核</h1>
+            <small>自動化建築法規檢核系統，協助建築師快速評估專案合規性。</small>
           </div>
         </div>
+        <div className="app-header__actions">
+          <span className="badge-pill">ThinkLab Code Check</span>
+          <a
+            href="https://github.com/thinklab-architects/buildingcodecheck"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="link-ghost"
+          >
+            View on GitHub
+          </a>
+        </div>
+      </header>
+
+      {/* Main Layout */}
+      <div className="main-layout">
+        {/* Left: Input Form */}
+        <BuildingForm
+          data={buildingData}
+          onChange={setBuildingData}
+        />
+
+        {/* Right: Results */}
+        <ComplianceResult results={results} />
       </div>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Left Column: Input Form */}
-          <div className="lg:col-span-5 space-y-6">
-            <BuildingForm
-              data={buildingData}
-              onChange={setBuildingData}
-            />
-          </div>
-
-          {/* Right Column: Results (Sticky) */}
-          <div className="lg:col-span-7">
-            <div className="sticky top-8">
-              <ComplianceResult results={results} />
-            </div>
-          </div>
-        </div>
-      </main>
-      <footer className="mt-16 text-center text-gray-500 text-sm">
-        <p>© {new Date().getFullYear()} Pingtung Green Building Checker. Designed for Excellence.</p>
+      {/* Footer */}
+      <footer className="app-footer">
+        <span>© {new Date().getFullYear()} Pingtung Green Building Checker</span>
+        <span>
+          <a
+            href="https://github.com/thinklab-architects/buildingcodecheck"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            貢獻 / issue 建議
+          </a>
+        </span>
       </footer>
     </div>
   );
