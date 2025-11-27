@@ -2,7 +2,7 @@
   "name": "buildingcodecheck",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://thinklab-architects.github.io/pingtung-green-building-check",
+  "homepage": "https://thinklab-architects.github.io/buildingcodecheck",
   "type": "module",
   "scripts": {
     "dev": "vite",
