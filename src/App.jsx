@@ -4,20 +4,23 @@ import GreenBuildingChecker from './components/GreenBuildingChecker';
 import TdrChecker from './components/TdrChecker';
 import CountyOddLotChecker from './components/CountyOddLotChecker';
 import IrregularSiteChecker from './components/IrregularSiteChecker';
+import TemporaryBuildingChecker from './components/TemporaryBuildingChecker';
 import HomePage from './components/HomePage';
 import { defaultBuildingData } from './utils/greenBuildingLogic';
 import { exampleTdrData } from './utils/pingtungTdrLogic';
 import { defaultLandCase } from './utils/countyOddLotLogic';
 import { defaultSite } from './utils/irregularSiteLogic';
+import { defaultTemporaryBuilding } from './utils/temporaryBuildingLogic';
 
 function App() {
-  const [currentView, setCurrentView] = useState('home'); // 'home', 'green-building', 'tdr', 'county-odd-lot', 'irregular-site'
+  const [currentView, setCurrentView] = useState('home'); // 'home', 'green-building', 'tdr', 'county-odd-lot', 'irregular-site', 'temporary-building'
 
   // State is lifted here to allow Header buttons to access it for Save/Export
   const [greenData, setGreenData] = useState(defaultBuildingData);
   const [tdrData, setTdrData] = useState(exampleTdrData);
   const [countyOddLotData, setCountyOddLotData] = useState(defaultLandCase);
   const [irregularSiteData, setIrregularSiteData] = useState(defaultSite);
+  const [temporaryBuildingData, setTemporaryBuildingData] = useState(defaultTemporaryBuilding);
 
   // We also need to track results for export
   const [currentResults, setCurrentResults] = useState(null);
@@ -35,6 +38,7 @@ function App() {
     if (currentView === 'tdr') return tdrData;
     if (currentView === 'county-odd-lot') return countyOddLotData;
     if (currentView === 'irregular-site') return irregularSiteData;
+    if (currentView === 'temporary-building') return temporaryBuildingData;
     return null;
   };
 
@@ -83,6 +87,10 @@ function App() {
           setIrregularSiteData(loaded.data);
           handleNavigate('irregular-site');
           alert("畸零地使用規則案件讀取成功！");
+        } else if (loaded.type === 'temporary-building') {
+          setTemporaryBuildingData(loaded.data);
+          handleNavigate('temporary-building');
+          alert("臨時性建築物案件讀取成功！");
         } else {
           // Fallback for old format or raw data
           if (loaded.sendOutParcels) {
@@ -97,6 +105,10 @@ function App() {
             setIrregularSiteData(loaded);
             handleNavigate('irregular-site');
             alert("偵測為畸零地使用規則資料，讀取成功！");
+          } else if (loaded.locationCounty !== undefined && loaded.isTemporaryBuilding !== undefined) {
+            setTemporaryBuildingData(loaded);
+            handleNavigate('temporary-building');
+            alert("偵測為臨時性建築物資料，讀取成功！");
           } else {
             setGreenData(loaded);
             handleNavigate('green-building');
@@ -184,6 +196,14 @@ function App() {
             onResultChange={setCurrentResults}
           />
         );
+      case 'temporary-building':
+        return (
+          <TemporaryBuildingChecker
+            data={temporaryBuildingData}
+            onChange={setTemporaryBuildingData}
+            onResultChange={setCurrentResults}
+          />
+        );
       default:
         return <HomePage onNavigate={handleNavigate} />;
     }
@@ -195,6 +215,7 @@ function App() {
       case 'tdr': return '都市計畫容積移轉許可審查';
       case 'county-odd-lot': return '屏東縣縣有畸零地處理作業要點';
       case 'irregular-site': return '屏東縣畸零地使用規則';
+      case 'temporary-building': return '屏東縣臨時性建築物管理要點';
       default: return '建築法規自動化檢核系統';
     }
   };

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Building2, Map, ArrowRight, LandPlot, Ruler } from 'lucide-react';
+import { Building2, Map, ArrowRight, LandPlot, Ruler, Construction } from 'lucide-react';
 import { GlassCard } from './SharedUI';
 
 // eslint-disable-next-line no-unused-vars
@@ -36,7 +36,7 @@ export default function HomePage({ onNavigate }) {
                 </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <ToolCard
                     Icon={Building2}
                     title="屏東縣綠建築自治條例"
@@ -67,6 +67,14 @@ export default function HomePage({ onNavigate }) {
                     description="檢核基地是否屬面積狹小或地界曲折之畸零地，並判斷是否符合例外准予建築之規定。"
                     onClick={() => onNavigate('irregular-site')}
                     colorClass="text-rose-600"
+                />
+
+                <ToolCard
+                    Icon={Construction}
+                    title="屏東縣臨時性建築物管理要點"
+                    description="檢核樣品屋、短期展演場所、競選辦事處等臨時性建築物是否符合管理要點規定。"
+                    onClick={() => onNavigate('temporary-building')}
+                    colorClass="text-orange-600"
                 />
             </div>
 
