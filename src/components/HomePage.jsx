@@ -1,5 +1,5 @@
 import React from 'react';
-import { Building2, Map, ArrowRight } from 'lucide-react';
+import { Building2, Map, ArrowRight, LandPlot, Ruler } from 'lucide-react';
 import { GlassCard } from './SharedUI';
 
 // eslint-disable-next-line no-unused-vars
@@ -26,7 +26,7 @@ const ToolCard = ({ Icon, title, description, onClick, colorClass = "text-sky-60
 
 export default function HomePage({ onNavigate }) {
     return (
-        <div className="max-w-4xl mx-auto py-12">
+        <div className="max-w-6xl mx-auto py-12 px-4">
             <div className="text-center mb-12">
                 <h1 className="text-4xl font-extrabold text-slate-800 mb-4 tracking-tight">
                     建築法規自動化檢核系統
@@ -36,7 +36,7 @@ export default function HomePage({ onNavigate }) {
                 </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <ToolCard
                     Icon={Building2}
                     title="屏東縣綠建築自治條例"
@@ -51,6 +51,22 @@ export default function HomePage({ onNavigate }) {
                     description="檢核送出基地與接受基地條件、容積移入上限、書件齊備度等是否符合屏東縣都市計畫容積移轉許可審查要點。"
                     onClick={() => onNavigate('tdr')}
                     colorClass="text-sky-600"
+                />
+
+                <ToolCard
+                    Icon={LandPlot}
+                    title="縣有畸零地處理"
+                    description="檢核縣有畸零地之讓售、標售、調整地形等處理方式是否符合屏東縣縣有畸零地處理作業要點。"
+                    onClick={() => onNavigate('county-odd-lot')}
+                    colorClass="text-amber-600"
+                />
+
+                <ToolCard
+                    Icon={Ruler}
+                    title="屏東縣畸零地使用規則"
+                    description="檢核基地是否屬面積狹小或地界曲折之畸零地，並判斷是否符合例外准予建築之規定。"
+                    onClick={() => onNavigate('irregular-site')}
+                    colorClass="text-rose-600"
                 />
             </div>
 

@@ -2,16 +2,22 @@ import React, { useState } from 'react';
 import { Save, Upload, FileDown, ArrowLeft } from 'lucide-react';
 import GreenBuildingChecker from './components/GreenBuildingChecker';
 import TdrChecker from './components/TdrChecker';
+import CountyOddLotChecker from './components/CountyOddLotChecker';
+import IrregularSiteChecker from './components/IrregularSiteChecker';
 import HomePage from './components/HomePage';
 import { defaultBuildingData } from './utils/greenBuildingLogic';
 import { exampleTdrData } from './utils/pingtungTdrLogic';
+import { defaultLandCase } from './utils/countyOddLotLogic';
+import { defaultSite } from './utils/irregularSiteLogic';
 
 function App() {
-  const [currentView, setCurrentView] = useState('home'); // 'home', 'green-building', 'tdr'
+  const [currentView, setCurrentView] = useState('home'); // 'home', 'green-building', 'tdr', 'county-odd-lot', 'irregular-site'
 
   // State is lifted here to allow Header buttons to access it for Save/Export
   const [greenData, setGreenData] = useState(defaultBuildingData);
   const [tdrData, setTdrData] = useState(exampleTdrData);
+  const [countyOddLotData, setCountyOddLotData] = useState(defaultLandCase);
+  const [irregularSiteData, setIrregularSiteData] = useState(defaultSite);
 
   // We also need to track results for export
   const [currentResults, setCurrentResults] = useState(null);
@@ -27,6 +33,8 @@ function App() {
   const getCurrentData = () => {
     if (currentView === 'green-building') return greenData;
     if (currentView === 'tdr') return tdrData;
+    if (currentView === 'county-odd-lot') return countyOddLotData;
+    if (currentView === 'irregular-site') return irregularSiteData;
     return null;
   };
 
@@ -67,12 +75,28 @@ function App() {
           setTdrData(loaded.data);
           handleNavigate('tdr');
           alert("容積移轉案件讀取成功！");
+        } else if (loaded.type === 'county-odd-lot') {
+          setCountyOddLotData(loaded.data);
+          handleNavigate('county-odd-lot');
+          alert("縣有畸零地案件讀取成功！");
+        } else if (loaded.type === 'irregular-site') {
+          setIrregularSiteData(loaded.data);
+          handleNavigate('irregular-site');
+          alert("畸零地使用規則案件讀取成功！");
         } else {
           // Fallback for old format or raw data
           if (loaded.sendOutParcels) {
             setTdrData(loaded);
             handleNavigate('tdr');
             alert("偵測為容積移轉資料，讀取成功！");
+          } else if (loaded.isCountyOddLot !== undefined) {
+            setCountyOddLotData(loaded);
+            handleNavigate('county-odd-lot');
+            alert("偵測為縣有畸零地資料，讀取成功！");
+          } else if (loaded.frontRoadWidthM !== undefined && loaded.useZone !== undefined) {
+            setIrregularSiteData(loaded);
+            handleNavigate('irregular-site');
+            alert("偵測為畸零地使用規則資料，讀取成功！");
           } else {
             setGreenData(loaded);
             handleNavigate('green-building');
@@ -144,6 +168,22 @@ function App() {
             onResultChange={setCurrentResults}
           />
         );
+      case 'county-odd-lot':
+        return (
+          <CountyOddLotChecker
+            data={countyOddLotData}
+            onChange={setCountyOddLotData}
+            onResultChange={setCurrentResults}
+          />
+        );
+      case 'irregular-site':
+        return (
+          <IrregularSiteChecker
+            data={irregularSiteData}
+            onChange={setIrregularSiteData}
+            onResultChange={setCurrentResults}
+          />
+        );
       default:
         return <HomePage onNavigate={handleNavigate} />;
     }
@@ -153,6 +193,8 @@ function App() {
     switch (currentView) {
       case 'green-building': return '屏東縣綠建築自治條例檢核';
       case 'tdr': return '都市計畫容積移轉許可審查';
+      case 'county-odd-lot': return '屏東縣縣有畸零地處理作業要點';
+      case 'irregular-site': return '屏東縣畸零地使用規則';
       default: return '建築法規自動化檢核系統';
     }
   };
