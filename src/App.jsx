@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Save, Upload, FileDown, ArrowLeft } from 'lucide-react';
 import GreenBuildingChecker from './components/GreenBuildingChecker';
 import TdrChecker from './components/TdrChecker';
@@ -14,6 +14,11 @@ import { defaultTemporaryBuilding } from './utils/temporaryBuildingLogic';
 
 function App() {
   const [currentView, setCurrentView] = useState('home'); // 'home', 'green-building', 'tdr', 'county-odd-lot', 'irregular-site', 'temporary-building'
+
+  // Debug log for version check
+  useEffect(() => {
+    console.log('Building Code Check v0.1.0 loaded');
+  }, []);
 
   // State is lifted here to allow Header buttons to access it for Save/Export
   const [greenData, setGreenData] = useState(defaultBuildingData);
@@ -89,6 +94,7 @@ function App() {
           alert("畸零地使用規則案件讀取成功！");
         } else if (loaded.type === 'temporary-building') {
           setTemporaryBuildingData(loaded.data);
+          handleNavigate('temporary-building');
           handleNavigate('temporary-building');
           alert("臨時性建築物案件讀取成功！");
         } else {
