@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Home, Save, Upload, FileDown, ArrowLeft } from 'lucide-react';
+import React, { useState } from 'react';
+import { Save, Upload, FileDown, ArrowLeft } from 'lucide-react';
 import GreenBuildingChecker from './components/GreenBuildingChecker';
 import TdrChecker from './components/TdrChecker';
 import HomePage from './components/HomePage';
@@ -17,9 +17,10 @@ function App() {
   const [currentResults, setCurrentResults] = useState(null);
 
   // Reset results when view changes
-  useEffect(() => {
+  const handleNavigate = (view) => {
+    setCurrentView(view);
     setCurrentResults(null);
-  }, [currentView]);
+  };
 
   // --- Persistence Functions ---
 
@@ -60,25 +61,25 @@ function App() {
         const loaded = JSON.parse(e.target.result);
         if (loaded.type === 'green-building') {
           setGreenData(loaded.data);
-          setCurrentView('green-building');
+          handleNavigate('green-building');
           alert("綠建築案件讀取成功！");
         } else if (loaded.type === 'tdr') {
           setTdrData(loaded.data);
-          setCurrentView('tdr');
+          handleNavigate('tdr');
           alert("容積移轉案件讀取成功！");
         } else {
           // Fallback for old format or raw data
           if (loaded.sendOutParcels) {
             setTdrData(loaded);
-            setCurrentView('tdr');
+            handleNavigate('tdr');
             alert("偵測為容積移轉資料，讀取成功！");
           } else {
             setGreenData(loaded);
-            setCurrentView('green-building');
+            handleNavigate('green-building');
             alert("偵測為綠建築資料，讀取成功！");
           }
         }
-      } catch (err) {
+      } catch {
         alert("讀取失敗：檔案格式錯誤");
       }
     };
@@ -144,7 +145,7 @@ function App() {
           />
         );
       default:
-        return <HomePage onNavigate={setCurrentView} />;
+        return <HomePage onNavigate={handleNavigate} />;
     }
   };
 
@@ -164,7 +165,7 @@ function App() {
           <div className="header-brand flex items-center gap-4">
             {currentView !== 'home' && (
               <button
-                onClick={() => setCurrentView('home')}
+                onClick={() => handleNavigate('home')}
                 className="p-2 rounded-full hover:bg-slate-200 transition text-slate-500"
                 title="回首頁"
               >

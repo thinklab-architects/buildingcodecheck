@@ -374,19 +374,9 @@ function checkReceiveBaseEligibility(building) {
 // =======================
 
 function checkTransferVolumeLimits(building) {
+    const { baselineFar, legalFar, tdrBonusFar, otherBonusFar } = building;
     const issues = [];
     const notes = [];
-
-    const baselineFar = Number(building.baselineFar) || 0;
-    const legalFar = Number(building.legalFar) || 0;
-    const tdrBonusFar = Number(building.tdrBonusFar) || 0;
-    const otherBonusFar = Number(building.otherBonusFar) || 0;
-    const urbanRenewalBonusFar = Number(building.urbanRenewalBonusFar) || 0;
-
-    if (!baselineFar || !legalFar) {
-        issues.push("未提供基準容積率或法定容積率，無法依第5點及第9點計算容積上限。");
-        return makeResult(false, issues, notes);
-    }
 
     const type = classifyReceiveBaseType(building);
 

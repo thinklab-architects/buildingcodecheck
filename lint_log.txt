@@ -1,0 +1,44 @@
+
+> buildingcodecheck@0.0.0 lint
+> eslint .
+
+
+X:\Research\VS code\buildingcodecheck\src\App.jsx
+  21:5   error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  19 |   // Reset results when view changes
+  20 |   useEffect(() => {
+> 21 |     setCurrentResults(null);
+     |     ^^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  22 |   }, [currentView]);
+  23 |
+  24 |   // --- Persistence Functions ---  react-hooks/set-state-in-effect
+  81:16  error  'err' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             no-unused-vars
+
+X:\Research\VS code\buildingcodecheck\src\components\HomePage.jsx
+  5:27  error  'Icon' is defined but never used  no-unused-vars
+
+X:\Research\VS code\buildingcodecheck\src\components\TdrChecker.jsx
+    1:17   error  'useState' is defined but never used. Allowed unused vars must match /^[A-Z_]/u        no-unused-vars
+   13:30   error  'exampleTdrData' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+  229:105  error  'setData' is not defined                                                               no-undef
+  230:110  error  'setData' is not defined                                                               no-undef
+  231:106  error  'setData' is not defined                                                               no-undef
+  232:103  error  'setData' is not defined                                                               no-undef
+  233:117  error  'setData' is not defined                                                               no-undef
+  234:111  error  'setData' is not defined                                                               no-undef
+
+X:\Research\VS code\buildingcodecheck\src\utils\greenBuildingLogic.js
+  77:10  error  'checkRoofGreeningRequirement' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+X:\Research\VS code\buildingcodecheck\src\utils\pingtungTdrLogic.js
+  384:11  error  'urbanRenewalBonusFar' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+??13 problems (13 errors, 0 warnings)
+

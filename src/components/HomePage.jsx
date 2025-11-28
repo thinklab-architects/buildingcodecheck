@@ -1,8 +1,9 @@
 import React from 'react';
-import { Building2, Map, FileText, ArrowRight } from 'lucide-react';
+import { Building2, Map, ArrowRight } from 'lucide-react';
 import { GlassCard } from './SharedUI';
 
-const ToolCard = ({ icon: Icon, title, description, onClick, colorClass = "text-sky-600" }) => (
+// eslint-disable-next-line no-unused-vars
+const ToolCard = ({ Icon, title, description, onClick, colorClass = "text-sky-600" }) => (
     <div
         onClick={onClick}
         className="glass-card cursor-pointer hover:scale-[1.02] transition-all group relative overflow-hidden"
@@ -37,7 +38,7 @@ export default function HomePage({ onNavigate }) {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <ToolCard
-                    icon={Building2}
+                    Icon={Building2}
                     title="屏東縣綠建築自治條例"
                     description="檢核綠化保水、屋頂設施、節能資源及其他設施等項目是否符合屏東縣綠建築自治條例規定。"
                     onClick={() => onNavigate('green-building')}
@@ -45,7 +46,7 @@ export default function HomePage({ onNavigate }) {
                 />
 
                 <ToolCard
-                    icon={Map}
+                    Icon={Map}
                     title="都市計畫容積移轉"
                     description="檢核送出基地與接受基地條件、容積移入上限、書件齊備度等是否符合屏東縣都市計畫容積移轉許可審查要點。"
                     onClick={() => onNavigate('tdr')}

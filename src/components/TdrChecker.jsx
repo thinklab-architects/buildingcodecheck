@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import {
     Building2,
     MapPin,
@@ -6,11 +6,10 @@ import {
     Calendar,
     CheckSquare,
     Plus,
-    Trash2,
-    Scale
+    Trash2
 } from 'lucide-react';
 import { GlassCard, CardHeader, InputGroup, TechInput, TechCheckbox, StatusBanner, StatusIcon } from './SharedUI';
-import { checkTdrCompliance, exampleTdrData } from '../utils/pingtungTdrLogic';
+import { checkTdrCompliance } from '../utils/pingtungTdrLogic';
 
 // --- Sub-components for TDR Results ---
 
@@ -70,6 +69,17 @@ export default function TdrChecker({ data, onChange, onResultChange }) {
 
     const handleChange = (field, value) => {
         onChange(prev => ({ ...prev, [field]: value }));
+    };
+
+    // Helper for nested docs updates
+    const handleDocChange = (field, value) => {
+        onChange(prev => ({
+            ...prev,
+            docs: {
+                ...prev.docs,
+                [field]: value
+            }
+        }));
     };
 
     const handleParcelChange = (type, index, field, value) => {
@@ -226,12 +236,12 @@ export default function TdrChecker({ data, onChange, onResultChange }) {
                 <GlassCard>
                     <CardHeader icon={CheckSquare} title="應附書件檢核" />
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                        <TechCheckbox label="申請書" checked={data.docs.form2Application} onChange={(v) => setData(prev => ({ ...prev, docs: { ...prev.docs, form2Application: v } }))} />
-                        <TechCheckbox label="計算表" checked={data.docs.form3CalculationSheet} onChange={(v) => setData(prev => ({ ...prev, docs: { ...prev.docs, form3CalculationSheet: v } }))} />
-                        <TechCheckbox label="同意書" checked={data.docs.form4OwnerConsent} onChange={(v) => setData(prev => ({ ...prev, docs: { ...prev.docs, form4OwnerConsent: v } }))} />
-                        <TechCheckbox label="切結書" checked={data.docs.form5Affidavit} onChange={(v) => setData(prev => ({ ...prev, docs: { ...prev.docs, form5Affidavit: v } }))} />
-                        <TechCheckbox label="土地權狀影本" checked={data.docs.hasSendOutOwnershipCopies} onChange={(v) => setData(prev => ({ ...prev, docs: { ...prev.docs, hasSendOutOwnershipCopies: v } }))} />
-                        <TechCheckbox label="分區證明" checked={data.docs.hasZoningCertificates} onChange={(v) => setData(prev => ({ ...prev, docs: { ...prev.docs, hasZoningCertificates: v } }))} />
+                        <TechCheckbox label="申請書" checked={data.docs.form2Application} onChange={(v) => handleDocChange('form2Application', v)} />
+                        <TechCheckbox label="計算表" checked={data.docs.form3CalculationSheet} onChange={(v) => handleDocChange('form3CalculationSheet', v)} />
+                        <TechCheckbox label="同意書" checked={data.docs.form4OwnerConsent} onChange={(v) => handleDocChange('form4OwnerConsent', v)} />
+                        <TechCheckbox label="切結書" checked={data.docs.form5Affidavit} onChange={(v) => handleDocChange('form5Affidavit', v)} />
+                        <TechCheckbox label="土地權狀影本" checked={data.docs.hasSendOutOwnershipCopies} onChange={(v) => handleDocChange('hasSendOutOwnershipCopies', v)} />
+                        <TechCheckbox label="分區證明" checked={data.docs.hasZoningCertificates} onChange={(v) => handleDocChange('hasZoningCertificates', v)} />
                     </div>
                 </GlassCard>
 

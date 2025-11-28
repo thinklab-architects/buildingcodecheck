@@ -68,32 +68,19 @@ function checkSolarRequirement(type, roof) {
         )} m²）`
       );
     }
-  }
 
-  return { ok: issues.length === 0, issues };
+    if ((roof.roofGreenProjectionArea || 0) < requiredArea) {
+      issues.push(
+        `第11條：屋頂綠化投影面積需 ≥ 有效最大建築面積 1/2（要求 ${requiredArea.toFixed(
+          2
+        )} m²）`
+      );
+    }
+
+    return { ok: issues.length === 0, issues };
+  }
 }
 
-// 第 11 條：屋頂綠化
-function checkRoofGreeningRequirement(roof) {
-  const issues = [];
-  if (!roof) {
-    issues.push("缺少 roof 資料");
-    return { ok: false, issues };
-  }
-
-  const effectiveArea = (roof.maxBuildingArea || 0) - (roof.nonBuildableArea || 0);
-  const requiredArea = effectiveArea * 0.5;
-
-  if ((roof.roofGreenProjectionArea || 0) < requiredArea) {
-    issues.push(
-      `第11條：屋頂綠化投影面積需 ≥ 有效最大建築面積 1/2（要求 ${requiredArea.toFixed(
-        2
-      )} m²）`
-    );
-  }
-
-  return { ok: issues.length === 0, issues };
-}
 
 // 第 12 條：屋頂隔熱
 function checkRoofInsulation(roof) {

@@ -1,0 +1,29 @@
+
+> buildingcodecheck@0.0.0 lint
+> eslint .
+
+
+X:\Research\VS code\buildingcodecheck\src\App.jsx
+  82:16  error  'err' is defined but never used  no-unused-vars
+
+X:\Research\VS code\buildingcodecheck\src\components\HomePage.jsx
+  5:27  error  '_Icon' is defined but never used  no-unused-vars
+
+X:\Research\VS code\buildingcodecheck\src\utils\greenBuildingLogic.js
+  260:3  error  Parsing error: 'import' and 'export' may only appear at the top level
+
+X:\Research\VS code\buildingcodecheck\src\utils\pingtungTdrLogic.js
+  399:30  error  'baselineFar' is not defined    no-undef
+  400:34  error  'baselineFar' is not defined    no-undef
+  404:17  error  'tdrBonusFar' is not defined    no-undef
+  409:24  error  'tdrBonusFar' is not defined    no-undef
+  417:17  error  'tdrBonusFar' is not defined    no-undef
+  427:48  error  'tdrBonusFar' is not defined    no-undef
+  427:62  error  'otherBonusFar' is not defined  no-undef
+  428:46  error  'legalFar' is not defined       no-undef
+  441:30  error  'tdrBonusFar' is not defined    no-undef
+  441:44  error  'otherBonusFar' is not defined  no-undef
+  442:48  error  'baselineFar' is not defined    no-undef
+
+??14 problems (14 errors, 0 warnings)
+
