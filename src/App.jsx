@@ -14,56 +14,42 @@ function App() {
   }, [buildingData]);
 
   return (
-    <div className="page-shell">
-      {/* Header */}
-      <header className="app-header">
-        <div className="app-header__title-block">
-          <div className="app-logo">
-            <Building2 size={20} />
-          </div>
-          <div className="app-title-text">
+    <div className="app-root">
+      <div className="app-container">
+        {/* Header */}
+        <header className="app-header">
+          <div className="header-brand">
             <h1>屏東縣綠建築自治條例檢核</h1>
-            <small>自動化建築法規檢核系統，協助建築師快速評估專案合規性。</small>
+            <p>Pingtung Green Building Compliance Checker</p>
           </div>
-        </div>
-        <div className="app-header__actions">
-          <span className="badge-pill">ThinkLab Code Check</span>
-          <a
-            href="https://github.com/thinklab-architects/buildingcodecheck"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="link-ghost"
-          >
-            View on GitHub
-          </a>
-        </div>
-      </header>
+          <div className="header-meta">
+            <span>資料來源：屏東縣政府</span>
+            <span>最後更新：2025-11-28</span>
+          </div>
+        </header>
 
-      {/* Main Layout */}
-      <div className="main-layout">
-        {/* Left: Input Form */}
-        <BuildingForm
-          data={buildingData}
-          onChange={setBuildingData}
-        />
+        {/* Main Layout */}
+        <main className="app-main">
+          {/* Left: Input Form (Toolbar style) */}
+          <section className="input-section">
+            <BuildingForm
+              data={buildingData}
+              onChange={setBuildingData}
+            />
+          </section>
 
-        {/* Right: Results */}
-        <ComplianceResult results={results} />
+          {/* Right: Results */}
+          <section className="result-section">
+            <ComplianceResult results={results} />
+          </section>
+        </main>
+
+        {/* Footer */}
+        <footer className="app-footer">
+          <span>© {new Date().getFullYear()} ThinkLab Architects</span>
+          <span>Powered by React & Dark Tech UI</span>
+        </footer>
       </div>
-
-      {/* Footer */}
-      <footer className="app-footer">
-        <span>© {new Date().getFullYear()} Pingtung Green Building Checker</span>
-        <span>
-          <a
-            href="https://github.com/thinklab-architects/buildingcodecheck"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            貢獻 / issue 建議
-          </a>
-        </span>
-      </footer>
     </div>
   );
 }
