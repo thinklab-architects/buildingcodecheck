@@ -236,12 +236,21 @@ export default function TdrChecker({ data, onChange, onResultChange }) {
                 <GlassCard>
                     <CardHeader icon={CheckSquare} title="應附書件檢核" />
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                        <TechCheckbox label="申請書" checked={data.docs.form2Application} onChange={(v) => handleDocChange('form2Application', v)} />
-                        <TechCheckbox label="計算表" checked={data.docs.form3CalculationSheet} onChange={(v) => handleDocChange('form3CalculationSheet', v)} />
-                        <TechCheckbox label="同意書" checked={data.docs.form4OwnerConsent} onChange={(v) => handleDocChange('form4OwnerConsent', v)} />
-                        <TechCheckbox label="切結書" checked={data.docs.form5Affidavit} onChange={(v) => handleDocChange('form5Affidavit', v)} />
-                        <TechCheckbox label="土地權狀影本" checked={data.docs.hasSendOutOwnershipCopies} onChange={(v) => handleDocChange('hasSendOutOwnershipCopies', v)} />
-                        <TechCheckbox label="分區證明" checked={data.docs.hasZoningCertificates} onChange={(v) => handleDocChange('hasZoningCertificates', v)} />
+                        <TechCheckbox label="【書件1】申請查核表" checked={data.docs.form1Checklist} onChange={(v) => handleDocChange('form1Checklist', v)} />
+                        <TechCheckbox label="【書件2】申請書" checked={data.docs.form2Application} onChange={(v) => handleDocChange('form2Application', v)} />
+                        <TechCheckbox label="【書件3】計算表" checked={data.docs.form3CalculationSheet} onChange={(v) => handleDocChange('form3CalculationSheet', v)} />
+                        <TechCheckbox label="【書件4】同意書" checked={data.docs.form4OwnerConsent} onChange={(v) => handleDocChange('form4OwnerConsent', v)} />
+                        <TechCheckbox label="【書件5】切結書" checked={data.docs.form5Affidavit} onChange={(v) => handleDocChange('form5Affidavit', v)} />
+                        <TechCheckbox label="送出基地土地權狀影本" checked={data.docs.hasSendOutOwnershipCopies} onChange={(v) => handleDocChange('hasSendOutOwnershipCopies', v)} />
+                        <TechCheckbox label="接受基地土地權狀影本" checked={data.docs.hasReceiveOwnershipCopies} onChange={(v) => handleDocChange('hasReceiveOwnershipCopies', v)} />
+                        <TechCheckbox label="土地使用分區證明書" checked={data.docs.hasZoningCertificates} onChange={(v) => handleDocChange('hasZoningCertificates', v)} />
+                        <TechCheckbox label="土地登記簿謄本" checked={data.docs.hasLandRegistryTranscripts} onChange={(v) => handleDocChange('hasLandRegistryTranscripts', v)} />
+                        <TechCheckbox label="地籍圖謄本" checked={data.docs.hasCadastreMaps} onChange={(v) => handleDocChange('hasCadastreMaps', v)} />
+                        <TechCheckbox label="現況照片" checked={data.docs.hasCurrentPhotos} onChange={(v) => handleDocChange('hasCurrentPhotos', v)} />
+                        <TechCheckbox label="都市計畫位置圖" checked={data.docs.hasUrbanPlanLocationMap} onChange={(v) => handleDocChange('hasUrbanPlanLocationMap', v)} />
+                        <TechCheckbox label="建築線指示（定）圖" checked={data.docs.hasBuildingLineMap} onChange={(v) => handleDocChange('hasBuildingLineMap', v)} />
+                        <TechCheckbox label="公共設施與交通影響分析" checked={data.docs.hasFacilityAndTrafficAnalysis} onChange={(v) => handleDocChange('hasFacilityAndTrafficAnalysis', v)} />
+                        <TechCheckbox label="其他必要文件" checked={data.docs.hasOtherRequiredDocs} onChange={(v) => handleDocChange('hasOtherRequiredDocs', v)} />
                     </div>
                 </GlassCard>
 
