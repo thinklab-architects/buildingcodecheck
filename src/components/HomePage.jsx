@@ -4,23 +4,23 @@ import { Building2, Map, ArrowRight, LandPlot, Ruler, Construction, Check, Alert
 const StatusBadge = ({ isCompliant }) => {
     if (isCompliant === true) {
         return (
-            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-medium border border-emerald-100">
-                <Check size={14} />
-                <span>合格</span>
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-700 border border-emerald-200 shadow-sm">
+                <Check size={20} strokeWidth={3} />
+                <span className="text-lg font-bold">合格</span>
             </div>
         );
     } else if (isCompliant === false) {
         return (
-            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-50 text-rose-700 text-xs font-medium border border-rose-100">
-                <AlertCircle size={14} />
-                <span>不合格</span>
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-rose-100 text-rose-700 border border-rose-200 shadow-sm">
+                <AlertCircle size={20} strokeWidth={3} />
+                <span className="text-lg font-bold">不合格</span>
             </div>
         );
     }
     return (
-        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-50 text-slate-500 text-xs font-medium border border-slate-100">
-            <Circle size={14} />
-            <span>未檢核</span>
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 text-slate-500 border border-slate-200">
+            <Circle size={18} />
+            <span className="text-base font-medium">未檢核</span>
         </div>
     );
 };
@@ -37,18 +37,18 @@ const ToolCard = ({
 }) => (
     <div
         className={`glass-card relative overflow-hidden transition-all duration-300 ${isEnabled
-                ? 'hover:scale-[1.02] hover:shadow-lg ring-1 ring-slate-200/50'
-                : 'opacity-60 grayscale bg-slate-50/50'
+                ? 'hover:scale-[1.02] hover:shadow-lg ring-1 ring-slate-200/50 bg-white/60'
+                : 'opacity-40 grayscale bg-slate-200/80 pointer-events-none'
             }`}
     >
         {/* Background Icon Decoration */}
-        <div className={`absolute top-0 right-0 p-4 transition-opacity duration-300 ${isEnabled ? 'opacity-10 group-hover:opacity-20' : 'opacity-5'
+        <div className={`absolute top-0 right-0 p-4 transition-opacity duration-300 ${isEnabled ? 'opacity-10 group-hover:opacity-20' : 'opacity-0'
             }`}>
             <Icon size={120} />
         </div>
 
-        {/* Checkbox for Activation */}
-        <div className="absolute top-4 right-4 z-20">
+        {/* Checkbox for Activation - Needs pointer-events-auto to work when card is disabled */}
+        <div className="absolute top-4 right-4 z-20 pointer-events-auto">
             <label className="relative inline-flex items-center cursor-pointer group">
                 <input
                     type="checkbox"
@@ -56,8 +56,8 @@ const ToolCard = ({
                     checked={isEnabled}
                     onChange={onToggle}
                 />
-                <div className="w-6 h-6 bg-white border-2 border-slate-300 rounded-md peer-checked:bg-sky-600 peer-checked:border-sky-600 transition-all flex items-center justify-center shadow-sm group-hover:border-sky-400">
-                    <Check size={16} className={`text-white transform transition-transform ${isEnabled ? 'scale-100' : 'scale-0'}`} />
+                <div className="w-7 h-7 bg-white border-2 border-slate-300 rounded-md peer-checked:bg-sky-600 peer-checked:border-sky-600 transition-all flex items-center justify-center shadow-sm group-hover:border-sky-400">
+                    <Check size={20} className={`text-white transform transition-transform ${isEnabled ? 'scale-100' : 'scale-0'}`} />
                 </div>
             </label>
         </div>
@@ -65,7 +65,7 @@ const ToolCard = ({
         {/* Card Content - Clickable Area */}
         <div
             onClick={isEnabled ? onClick : undefined}
-            className={`relative z-10 flex flex-col h-full p-6 ${isEnabled ? 'cursor-pointer group' : 'cursor-not-allowed'}`}
+            className={`relative z-10 flex flex-col h-full p-6 ${isEnabled ? 'cursor-pointer group' : ''}`}
         >
             <div className="flex justify-between items-start mb-4">
                 <div className={`p-3 rounded-xl bg-white/80 w-fit shadow-sm backdrop-blur-sm ${isEnabled ? colorClass : 'text-slate-400'}`}>
@@ -73,7 +73,7 @@ const ToolCard = ({
                 </div>
                 {/* Status Badge - Only show if enabled */}
                 {isEnabled && (
-                    <div className="mr-8"> {/* Margin right to avoid overlap with checkbox */}
+                    <div className="mr-10"> {/* Margin right to avoid overlap with checkbox */}
                         <StatusBadge isCompliant={status} />
                     </div>
                 )}
