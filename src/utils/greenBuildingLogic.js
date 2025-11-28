@@ -79,8 +79,9 @@ function checkSolarRequirement(type, roof) {
 
     return { ok: issues.length === 0, issues };
   }
-}
 
+  return { ok: issues.length === 0, issues };
+}
 
 // 第 12 條：屋頂隔熱
 function checkRoofInsulation(roof) {

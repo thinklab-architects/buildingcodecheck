@@ -4,8 +4,8 @@ import { GlassCard, CardHeader, StatusIcon, StatusBanner } from './SharedUI';
 
 const ResultCard = ({ title, isCompliant, value, standard, unit, issues }) => (
     <div className={`p-4 rounded-xl border mb-3 transition-all ${isCompliant
-            ? 'bg-emerald-50/50 border-emerald-100'
-            : 'bg-rose-50/50 border-rose-100'
+        ? 'bg-emerald-50/50 border-emerald-100'
+        : 'bg-rose-50/50 border-rose-100'
         }`}>
         <div className="flex justify-between items-start mb-2">
             <h4 className="font-bold text-slate-700">{title}</h4>
@@ -40,10 +40,24 @@ const ResultCard = ({ title, isCompliant, value, standard, unit, issues }) => (
     </div>
 );
 
-const ComplianceResult = ({ results, buildingType }) => {
+const ComplianceResult = ({ results }) => {
     if (!results) return null;
 
-    const { isCompliant, details } = results;
+    const { isCompliant, buildingType, checks } = results;
+
+    // Map check keys to readable names
+    const checkNames = {
+        solar: '太陽光電設施',
+        roofInsulation: '屋頂隔熱',
+        waste: '垃圾處理設施',
+        waterSaving: '省水設備',
+        materials: '綠建材使用率',
+        bikeParking: '自行車停車',
+        bikeLift: '載車電梯',
+        permeablePaving: '透水鋪面',
+        lighting: '照明設備',
+        roofCombo: '屋頂設施組合'
+    };
 
     return (
         <GlassCard className="sticky top-6">
@@ -58,17 +72,33 @@ const ComplianceResult = ({ results, buildingType }) => {
                 title={isCompliant ? '符合規定' : '未符合規定'}
             />
 
-            <div className="mt-6">
-                {details.map((item, index) => (
-                    <ResultCard
-                        key={index}
-                        title={item.name}
-                        isCompliant={item.isCompliant}
-                        value={item.value}
-                        standard={item.standard}
-                        unit={item.unit}
-                        issues={item.issues}
-                    />
+            <div className="mt-6 space-y-3">
+                {checks && Object.entries(checks).map(([key, check]) => (
+                    <div
+                        key={key}
+                        className={`p-4 rounded-xl border transition-all ${check.ok
+                                ? 'bg-emerald-50/50 border-emerald-100'
+                                : 'bg-rose-50/50 border-rose-100'
+                            }`}
+                    >
+                        <div className="flex justify-between items-start mb-2">
+                            <h4 className="font-bold text-slate-700">
+                                {checkNames[key] || key}
+                            </h4>
+                            <StatusIcon ok={check.ok} />
+                        </div>
+
+                        {!check.ok && check.issues && check.issues.length > 0 && (
+                            <div className="mt-2 pt-2 border-t border-rose-200/50">
+                                {check.issues.map((issue, idx) => (
+                                    <div key={idx} className="flex items-start gap-2 text-xs text-rose-600 mt-1">
+                                        <AlertTriangle size={12} className="mt-0.5 shrink-0" />
+                                        <span>{issue}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 ))}
             </div>
 
