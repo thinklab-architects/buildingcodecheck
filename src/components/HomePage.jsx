@@ -36,7 +36,7 @@ export default function HomePage({ onNavigate }) {
                 </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <ToolCard
                     Icon={Building2}
                     title="屏東縣綠建築自治條例"
