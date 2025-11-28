@@ -1,0 +1,29 @@
+
+> buildingcodecheck@0.0.0 build
+> vite build
+
+[36mvite v7.2.4 [32mbuilding client environment for production...[36m[39m
+transforming...
+[32m??[39m 35 modules transformed.
+??[39m Build failed in 467ms
+error during build:
+src/App.jsx (3:7): "default" is not exported by "src/components/GreenBuildingChecker.jsx", imported by "src/App.jsx".
+file: X:/Research/VS code/buildingcodecheck/src/App.jsx:3:7
+
+1: import React, { useState, useEffect } from 'react';
+2: // import { Home, Save, Upload, FileDown, ArrowLeft } from 'lucide-react';
+3: import GreenBuildingChecker from './components/GreenBuildingChecker';
+          ^
+4: import TdrChecker from './components/TdrChecker';
+5: import HomePage from './components/HomePage';
+
+    at getRollupError (file:///X:/Research/VS%20code/buildingcodecheck/node_modules/rollup/dist/es/shared/parseAst.js:401:41)
+    at error (file:///X:/Research/VS%20code/buildingcodecheck/node_modules/rollup/dist/es/shared/parseAst.js:397:42)
+    at Module.error (file:///X:/Research/VS%20code/buildingcodecheck/node_modules/rollup/dist/es/shared/node-entry.js:16956:16)
+    at Module.traceVariable (file:///X:/Research/VS%20code/buildingcodecheck/node_modules/rollup/dist/es/shared/node-entry.js:17412:29)
+    at ModuleScope.findVariable (file:///X:/Research/VS%20code/buildingcodecheck/node_modules/rollup/dist/es/shared/node-entry.js:15076:39)
+    at FunctionScope.findVariable (file:///X:/Research/VS%20code/buildingcodecheck/node_modules/rollup/dist/es/shared/node-entry.js:5649:38)
+    at FunctionBodyScope.findVariable (file:///X:/Research/VS%20code/buildingcodecheck/node_modules/rollup/dist/es/shared/node-entry.js:5649:38)
+    at ReturnValueScope.findVariable (file:///X:/Research/VS%20code/buildingcodecheck/node_modules/rollup/dist/es/shared/node-entry.js:5649:38)
+    at FunctionBodyScope.findVariable (file:///X:/Research/VS%20code/buildingcodecheck/node_modules/rollup/dist/es/shared/node-entry.js:5649:38)
+    at BlockScope.findVariable (file:///X:/Research/VS%20code/buildingcodecheck/node_modules/rollup/dist/es/shared/node-entry.js:5649:38)
