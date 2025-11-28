@@ -26,7 +26,7 @@ const ToolCard = ({ Icon, title, description, onClick, colorClass = "text-sky-60
 
 export default function HomePage({ onNavigate }) {
     return (
-        <div className="max-w-6xl mx-auto py-12 px-4">
+        <div className="max-w-7xl mx-auto py-12 px-4">
             <div className="text-center mb-12">
                 <h1 className="text-4xl font-extrabold text-slate-800 mb-4 tracking-tight">
                     建築法規自動化檢核系統
