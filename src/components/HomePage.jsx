@@ -4,23 +4,23 @@ import { Building2, Map, ArrowRight, LandPlot, Ruler, Construction, Check, Alert
 const StatusBadge = ({ isCompliant }) => {
     if (isCompliant === true) {
         return (
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-700 border border-emerald-200 shadow-sm">
-                <Check size={20} strokeWidth={3} />
-                <span className="text-lg font-bold">合格</span>
+            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-100 text-emerald-600 border-2 border-emerald-200 shadow-sm">
+                <Check size={24} strokeWidth={4} />
+                <span className="text-2xl font-extrabold tracking-wide">合格</span>
             </div>
         );
     } else if (isCompliant === false) {
         return (
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-rose-100 text-rose-700 border border-rose-200 shadow-sm">
-                <AlertCircle size={20} strokeWidth={3} />
-                <span className="text-lg font-bold">不合格</span>
+            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-rose-100 text-rose-600 border-2 border-rose-200 shadow-sm">
+                <AlertCircle size={24} strokeWidth={4} />
+                <span className="text-2xl font-extrabold tracking-wide">不合格</span>
             </div>
         );
     }
     return (
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 text-slate-500 border border-slate-200">
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 text-slate-400 border border-slate-200">
             <Circle size={18} />
-            <span className="text-base font-medium">未檢核</span>
+            <span className="text-base font-bold">未檢核</span>
         </div>
     );
 };
@@ -37,14 +37,14 @@ const ToolCard = ({
 }) => (
     <div
         className={`glass-card relative overflow-hidden transition-all duration-300 flex flex-col ${isEnabled
-                ? 'hover:scale-[1.02] hover:shadow-lg ring-1 ring-slate-200/50 bg-white/60'
-                : 'opacity-40 grayscale bg-slate-200/80 pointer-events-none'
+                ? 'hover:scale-[1.02] hover:shadow-lg ring-1 ring-slate-200/50 bg-white/80'
+                : 'bg-gray-100 ring-1 ring-gray-200 pointer-events-none'
             }`}
     >
         {/* Background Icon Decoration */}
-        <div className={`absolute top-0 right-0 p-4 transition-opacity duration-300 ${isEnabled ? 'opacity-10 group-hover:opacity-20' : 'opacity-0'
+        <div className={`absolute top-0 right-0 p-4 transition-opacity duration-300 ${isEnabled ? 'opacity-10 group-hover:opacity-20' : 'opacity-[0.02]'
             }`}>
-            <Icon size={120} />
+            <Icon size={120} className={isEnabled ? '' : 'text-gray-400'} />
         </div>
 
         {/* Checkbox for Activation - Needs pointer-events-auto to work when card is disabled */}
@@ -56,7 +56,10 @@ const ToolCard = ({
                     checked={isEnabled}
                     onChange={onToggle}
                 />
-                <div className="w-7 h-7 bg-white border-2 border-slate-300 rounded-md peer-checked:bg-sky-600 peer-checked:border-sky-600 transition-all flex items-center justify-center shadow-sm group-hover:border-sky-400">
+                <div className={`w-8 h-8 border-2 rounded-lg transition-all flex items-center justify-center shadow-sm ${isEnabled
+                        ? 'bg-white border-slate-300 peer-checked:bg-sky-600 peer-checked:border-sky-600 group-hover:border-sky-400'
+                        : 'bg-white border-gray-300'
+                    }`}>
                     <Check size={20} className={`text-white transform transition-transform ${isEnabled ? 'scale-100' : 'scale-0'}`} />
                 </div>
             </label>
@@ -68,22 +71,27 @@ const ToolCard = ({
             className={`relative z-10 flex flex-col flex-1 p-6 ${isEnabled ? 'cursor-pointer group' : ''}`}
         >
             <div className="flex justify-between items-start mb-4">
-                <div className={`p-3 rounded-xl bg-white/80 w-fit shadow-sm backdrop-blur-sm ${isEnabled ? colorClass : 'text-slate-400'}`}>
+                <div className={`p-3 rounded-xl w-fit shadow-sm backdrop-blur-sm transition-colors ${isEnabled
+                        ? `bg-white/80 ${colorClass}`
+                        : 'bg-gray-200 text-gray-400'
+                    }`}>
                     <Icon size={32} />
                 </div>
                 {/* Status Badge - Only show if enabled */}
                 {isEnabled && (
-                    <div className="mr-10"> {/* Margin right to avoid overlap with checkbox */}
+                    <div className="mr-12"> {/* Margin right to avoid overlap with checkbox */}
                         <StatusBadge isCompliant={status} />
                     </div>
                 )}
             </div>
 
-            <h3 className={`text-xl font-bold mb-2 ${isEnabled ? 'text-slate-800' : 'text-slate-500'}`}>
+            <h3 className={`text-xl font-bold mb-2 transition-colors ${isEnabled ? 'text-slate-800' : 'text-gray-400'
+                }`}>
                 {title}
             </h3>
 
-            <p className={`text-sm mb-6 flex-1 leading-relaxed ${isEnabled ? 'text-slate-500' : 'text-slate-400'}`}>
+            <p className={`text-sm mb-6 flex-1 leading-relaxed transition-colors ${isEnabled ? 'text-slate-500' : 'text-gray-300'
+                }`}>
                 {description}
             </p>
 
@@ -99,7 +107,7 @@ const ToolCard = ({
                     disabled={!isEnabled}
                     className={`flex items-center gap-2 px-6 py-2 rounded-lg font-bold transition-all shadow-sm ${isEnabled
                             ? 'bg-slate-800 text-white hover:bg-slate-700 hover:shadow-md active:scale-95'
-                            : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                            : 'bg-gray-200 text-gray-300 cursor-not-allowed'
                         }`}
                 >
                     ENTER
