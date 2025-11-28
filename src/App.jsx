@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Save, Upload, FileDown, ArrowLeft } from 'lucide-react';
 import GreenBuildingChecker from './components/GreenBuildingChecker';
 import TdrChecker from './components/TdrChecker';
@@ -6,11 +6,11 @@ import CountyOddLotChecker from './components/CountyOddLotChecker';
 import IrregularSiteChecker from './components/IrregularSiteChecker';
 import TemporaryBuildingChecker from './components/TemporaryBuildingChecker';
 import HomePage from './components/HomePage';
-import { defaultBuildingData } from './utils/greenBuildingLogic';
-import { exampleTdrData } from './utils/pingtungTdrLogic';
-import { defaultLandCase } from './utils/countyOddLotLogic';
-import { defaultSite } from './utils/irregularSiteLogic';
-import { defaultTemporaryBuilding } from './utils/temporaryBuildingLogic';
+import { defaultBuildingData, checkGreenBuildingCompliance } from './utils/greenBuildingLogic';
+import { exampleTdrData, checkTdrCompliance } from './utils/pingtungTdrLogic';
+import { defaultLandCase, checkCountyOddLotCase } from './utils/countyOddLotLogic';
+import { defaultSite, checkPingtungIrregularLandRules } from './utils/irregularSiteLogic';
+import { defaultTemporaryBuilding, checkPingtungTemporaryBuilding } from './utils/temporaryBuildingLogic';
 
 function App() {
   const [currentView, setCurrentView] = useState('home'); // 'home', 'green-building', 'tdr', 'county-odd-lot', 'irregular-site', 'temporary-building'
@@ -26,6 +26,33 @@ function App() {
   const [countyOddLotData, setCountyOddLotData] = useState(defaultLandCase);
   const [irregularSiteData, setIrregularSiteData] = useState(defaultSite);
   const [temporaryBuildingData, setTemporaryBuildingData] = useState(defaultTemporaryBuilding);
+
+  // Track which checkers are enabled (checked on home page)
+  const [enabledCheckers, setEnabledCheckers] = useState({
+    'green-building': true,
+    'tdr': true,
+    'county-odd-lot': true,
+    'irregular-site': true,
+    'temporary-building': true,
+  });
+
+  const toggleChecker = (id) => {
+    setEnabledCheckers(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
+  };
+
+  // Calculate statuses for Home Page
+  const checkerStatuses = useMemo(() => {
+    return {
+      'green-building': checkGreenBuildingCompliance(greenData).isCompliant,
+      'tdr': checkTdrCompliance(tdrData).isCompliant,
+      'county-odd-lot': checkCountyOddLotCase(countyOddLotData).isCompliant,
+      'irregular-site': checkPingtungIrregularLandRules(irregularSiteData).isCompliant,
+      'temporary-building': checkPingtungTemporaryBuilding(temporaryBuildingData).isCompliant,
+    };
+  }, [greenData, tdrData, countyOddLotData, irregularSiteData, temporaryBuildingData]);
 
   // We also need to track results for export
   const [currentResults, setCurrentResults] = useState(null);
@@ -48,6 +75,25 @@ function App() {
   };
 
   const handleSaveProject = () => {
+    // If on home page, save Master Project
+    if (currentView === 'home') {
+      const masterData = {
+        type: 'master-project',
+        timestamp: new Date().toISOString(),
+        data: {
+          greenData,
+          tdrData,
+          countyOddLotData,
+          irregularSiteData,
+          temporaryBuildingData,
+          enabledCheckers
+        }
+      };
+      downloadJSON(masterData, `master_project_${new Date().toISOString().slice(0, 10)}.json`);
+      return;
+    }
+
+    // Fallback for individual views (though button is hidden)
     const data = getCurrentData();
     if (!data) return;
 
@@ -56,13 +102,16 @@ function App() {
       data: data,
       timestamp: new Date().toISOString()
     };
+    downloadJSON(exportObj, `${currentView}_data_${new Date().toISOString().slice(0, 10)}.json`);
+  };
 
-    const jsonString = JSON.stringify(exportObj, null, 2);
+  const downloadJSON = (obj, filename) => {
+    const jsonString = JSON.stringify(obj, null, 2);
     const blob = new Blob([jsonString], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `${currentView}_data_${new Date().toISOString().slice(0, 10)}.json`;
+    link.download = filename;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -76,48 +125,51 @@ function App() {
     reader.onload = (e) => {
       try {
         const loaded = JSON.parse(e.target.result);
+
+        // Handle Master Project
+        if (loaded.type === 'master-project') {
+          if (loaded.data.greenData) setGreenData(loaded.data.greenData);
+          if (loaded.data.tdrData) setTdrData(loaded.data.tdrData);
+          if (loaded.data.countyOddLotData) setCountyOddLotData(loaded.data.countyOddLotData);
+          if (loaded.data.irregularSiteData) setIrregularSiteData(loaded.data.irregularSiteData);
+          if (loaded.data.temporaryBuildingData) setTemporaryBuildingData(loaded.data.temporaryBuildingData);
+          if (loaded.data.enabledCheckers) setEnabledCheckers(loaded.data.enabledCheckers);
+          alert("專案總檔讀取成功！");
+          return;
+        }
+
+        // Handle Individual Files
         if (loaded.type === 'green-building') {
           setGreenData(loaded.data);
-          handleNavigate('green-building');
           alert("綠建築案件讀取成功！");
         } else if (loaded.type === 'tdr') {
           setTdrData(loaded.data);
-          handleNavigate('tdr');
           alert("容積移轉案件讀取成功！");
         } else if (loaded.type === 'county-odd-lot') {
           setCountyOddLotData(loaded.data);
-          handleNavigate('county-odd-lot');
           alert("縣有畸零地案件讀取成功！");
         } else if (loaded.type === 'irregular-site') {
           setIrregularSiteData(loaded.data);
-          handleNavigate('irregular-site');
           alert("畸零地使用規則案件讀取成功！");
         } else if (loaded.type === 'temporary-building') {
           setTemporaryBuildingData(loaded.data);
-          handleNavigate('temporary-building');
-          handleNavigate('temporary-building');
           alert("臨時性建築物案件讀取成功！");
         } else {
-          // Fallback for old format or raw data
+          // Fallback logic for old format
           if (loaded.sendOutParcels) {
             setTdrData(loaded);
-            handleNavigate('tdr');
             alert("偵測為容積移轉資料，讀取成功！");
           } else if (loaded.isCountyOddLot !== undefined) {
             setCountyOddLotData(loaded);
-            handleNavigate('county-odd-lot');
             alert("偵測為縣有畸零地資料，讀取成功！");
           } else if (loaded.frontRoadWidthM !== undefined && loaded.useZone !== undefined) {
             setIrregularSiteData(loaded);
-            handleNavigate('irregular-site');
             alert("偵測為畸零地使用規則資料，讀取成功！");
           } else if (loaded.locationCounty !== undefined && loaded.isTemporaryBuilding !== undefined) {
             setTemporaryBuildingData(loaded);
-            handleNavigate('temporary-building');
             alert("偵測為臨時性建築物資料，讀取成功！");
           } else {
             setGreenData(loaded);
-            handleNavigate('green-building');
             alert("偵測為綠建築資料，讀取成功！");
           }
         }
@@ -140,7 +192,6 @@ function App() {
 
     const pushResult = (name, res) => {
       if (!res) return;
-      // Handle TDR result structure (ok, issues, notes) vs GreenBuilding (ok, issues)
       const status = res.ok ? '合格' : '不合格';
       const issues = res.issues ? res.issues.join('; ') : '';
       const notes = res.notes ? res.notes.join('; ') : '';
@@ -211,7 +262,14 @@ function App() {
           />
         );
       default:
-        return <HomePage onNavigate={handleNavigate} />;
+        return (
+          <HomePage
+            onNavigate={handleNavigate}
+            enabledCheckers={enabledCheckers}
+            toggleChecker={toggleChecker}
+            checkerStatuses={checkerStatuses}
+          />
+        );
     }
   };
 
@@ -249,38 +307,42 @@ function App() {
 
           <div className="header-meta items-center">
             <div className="flex gap-2">
-              <button
-                onClick={() => document.getElementById('load-file').click()}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 transition text-sm font-medium shadow-sm"
-              >
-                <Upload size={16} />
-                讀取
-              </button>
-              <input
-                type="file"
-                id="load-file"
-                className="hidden"
-                accept=".json"
-                onChange={handleLoadProject}
-              />
-
-              {currentView !== 'home' && (
+              {/* Save/Load only on Home Page as requested */}
+              {currentView === 'home' && (
                 <>
+                  <button
+                    onClick={() => document.getElementById('load-file').click()}
+                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 transition text-sm font-medium shadow-sm"
+                  >
+                    <Upload size={16} />
+                    讀取專案
+                  </button>
+                  <input
+                    type="file"
+                    id="load-file"
+                    className="hidden"
+                    accept=".json"
+                    onChange={handleLoadProject}
+                  />
+
                   <button
                     onClick={handleSaveProject}
                     className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 transition text-sm font-medium shadow-sm"
                   >
                     <Save size={16} />
-                    儲存
-                  </button>
-                  <button
-                    onClick={handleExportCSV}
-                    className="flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 text-white hover:bg-sky-700 transition text-sm font-medium shadow-sm"
-                  >
-                    <FileDown size={16} />
-                    匯出
+                    儲存專案
                   </button>
                 </>
+              )}
+
+              {currentView !== 'home' && (
+                <button
+                  onClick={handleExportCSV}
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-sky-600 text-white hover:bg-sky-700 transition text-sm font-medium shadow-sm"
+                >
+                  <FileDown size={16} />
+                  匯出報告
+                </button>
               )}
             </div>
           </div>

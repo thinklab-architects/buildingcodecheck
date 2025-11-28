@@ -1,30 +1,114 @@
 import React from 'react';
-import { Building2, Map, ArrowRight, LandPlot, Ruler, Construction } from 'lucide-react';
-import { GlassCard } from './SharedUI';
+import { Building2, Map, ArrowRight, LandPlot, Ruler, Construction, Check, AlertCircle, Circle } from 'lucide-react';
 
-// eslint-disable-next-line no-unused-vars
-const ToolCard = ({ Icon, title, description, onClick, colorClass = "text-sky-600" }) => (
+const StatusBadge = ({ isCompliant }) => {
+    if (isCompliant === true) {
+        return (
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-medium border border-emerald-100">
+                <Check size={14} />
+                <span>合格</span>
+            </div>
+        );
+    } else if (isCompliant === false) {
+        return (
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-50 text-rose-700 text-xs font-medium border border-rose-100">
+                <AlertCircle size={14} />
+                <span>不合格</span>
+            </div>
+        );
+    }
+    return (
+        <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-50 text-slate-500 text-xs font-medium border border-slate-100">
+            <Circle size={14} />
+            <span>未檢核</span>
+        </div>
+    );
+};
+
+const ToolCard = ({
+    Icon,
+    title,
+    description,
+    onClick,
+    colorClass = "text-sky-600",
+    isEnabled,
+    onToggle,
+    status
+}) => (
     <div
-        onClick={onClick}
-        className="glass-card cursor-pointer hover:scale-[1.02] transition-all group relative overflow-hidden"
+        className={`glass-card relative overflow-hidden transition-all duration-300 ${isEnabled
+                ? 'hover:scale-[1.02] hover:shadow-lg ring-1 ring-slate-200/50'
+                : 'opacity-60 grayscale bg-slate-50/50'
+            }`}
     >
-        <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+        {/* Background Icon Decoration */}
+        <div className={`absolute top-0 right-0 p-4 transition-opacity duration-300 ${isEnabled ? 'opacity-10 group-hover:opacity-20' : 'opacity-5'
+            }`}>
             <Icon size={120} />
         </div>
-        <div className="relative z-10 flex flex-col h-full">
-            <div className={`p-3 rounded-xl bg-white/50 w-fit mb-4 ${colorClass}`}>
-                <Icon size={32} />
+
+        {/* Checkbox for Activation */}
+        <div className="absolute top-4 right-4 z-20">
+            <label className="relative inline-flex items-center cursor-pointer group">
+                <input
+                    type="checkbox"
+                    className="sr-only peer"
+                    checked={isEnabled}
+                    onChange={onToggle}
+                />
+                <div className="w-6 h-6 bg-white border-2 border-slate-300 rounded-md peer-checked:bg-sky-600 peer-checked:border-sky-600 transition-all flex items-center justify-center shadow-sm group-hover:border-sky-400">
+                    <Check size={16} className={`text-white transform transition-transform ${isEnabled ? 'scale-100' : 'scale-0'}`} />
+                </div>
+            </label>
+        </div>
+
+        {/* Card Content - Clickable Area */}
+        <div
+            onClick={isEnabled ? onClick : undefined}
+            className={`relative z-10 flex flex-col h-full p-6 ${isEnabled ? 'cursor-pointer group' : 'cursor-not-allowed'}`}
+        >
+            <div className="flex justify-between items-start mb-4">
+                <div className={`p-3 rounded-xl bg-white/80 w-fit shadow-sm backdrop-blur-sm ${isEnabled ? colorClass : 'text-slate-400'}`}>
+                    <Icon size={32} />
+                </div>
+                {/* Status Badge - Only show if enabled */}
+                {isEnabled && (
+                    <div className="mr-8"> {/* Margin right to avoid overlap with checkbox */}
+                        <StatusBadge isCompliant={status} />
+                    </div>
+                )}
             </div>
-            <h3 className="text-xl font-bold text-slate-800 mb-2">{title}</h3>
-            <p className="text-slate-500 text-sm mb-6 flex-1">{description}</p>
-            <div className="flex items-center text-sm font-semibold text-slate-700 group-hover:text-sky-600 transition-colors">
-                開始檢核 <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
+
+            <h3 className={`text-xl font-bold mb-2 ${isEnabled ? 'text-slate-800' : 'text-slate-500'}`}>
+                {title}
+            </h3>
+
+            <p className={`text-sm mb-6 flex-1 leading-relaxed ${isEnabled ? 'text-slate-500' : 'text-slate-400'}`}>
+                {description}
+            </p>
+
+            <div className={`flex items-center text-sm font-semibold transition-colors ${isEnabled
+                    ? 'text-slate-700 group-hover:text-sky-600'
+                    : 'text-slate-400'
+                }`}>
+                {isEnabled ? (
+                    <>
+                        開始檢核
+                        <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
+                    </>
+                ) : (
+                    <span>未啟用</span>
+                )}
             </div>
         </div>
     </div>
 );
 
-export default function HomePage({ onNavigate }) {
+export default function HomePage({ onNavigate, enabledCheckers, toggleChecker, checkerStatuses }) {
+    // Fallback for initial render or if props are missing
+    const isEnabled = (id) => enabledCheckers ? enabledCheckers[id] : true;
+    const getStatus = (id) => checkerStatuses ? checkerStatuses[id] : null;
+
     return (
         <div className="max-w-7xl mx-auto py-12 px-4">
             <div className="text-center mb-12">
@@ -32,7 +116,7 @@ export default function HomePage({ onNavigate }) {
                     建築法規自動化檢核系統
                 </h1>
                 <p className="text-lg text-slate-500 max-w-2xl mx-auto">
-                    請選擇您要進行的法規檢討項目。系統將協助您快速計算並產出合規性報告。
+                    請勾選您要進行的法規檢討項目。系統將協助您快速計算並產出合規性報告。
                 </p>
             </div>
 
@@ -43,6 +127,9 @@ export default function HomePage({ onNavigate }) {
                     description="檢核綠化保水、屋頂設施、節能資源及其他設施等項目是否符合屏東縣綠建築自治條例規定。"
                     onClick={() => onNavigate('green-building')}
                     colorClass="text-emerald-600"
+                    isEnabled={isEnabled('green-building')}
+                    onToggle={() => toggleChecker('green-building')}
+                    status={getStatus('green-building')}
                 />
 
                 <ToolCard
@@ -51,6 +138,9 @@ export default function HomePage({ onNavigate }) {
                     description="檢核送出基地與接受基地條件、容積移入上限、書件齊備度等是否符合屏東縣都市計畫容積移轉許可審查要點。"
                     onClick={() => onNavigate('tdr')}
                     colorClass="text-sky-600"
+                    isEnabled={isEnabled('tdr')}
+                    onToggle={() => toggleChecker('tdr')}
+                    status={getStatus('tdr')}
                 />
 
                 <ToolCard
@@ -59,6 +149,9 @@ export default function HomePage({ onNavigate }) {
                     description="檢核縣有畸零地之讓售、標售、調整地形等處理方式是否符合屏東縣縣有畸零地處理作業要點。"
                     onClick={() => onNavigate('county-odd-lot')}
                     colorClass="text-amber-600"
+                    isEnabled={isEnabled('county-odd-lot')}
+                    onToggle={() => toggleChecker('county-odd-lot')}
+                    status={getStatus('county-odd-lot')}
                 />
 
                 <ToolCard
@@ -67,6 +160,9 @@ export default function HomePage({ onNavigate }) {
                     description="檢核基地是否屬面積狹小或地界曲折之畸零地，並判斷是否符合例外准予建築之規定。"
                     onClick={() => onNavigate('irregular-site')}
                     colorClass="text-rose-600"
+                    isEnabled={isEnabled('irregular-site')}
+                    onToggle={() => toggleChecker('irregular-site')}
+                    status={getStatus('irregular-site')}
                 />
 
                 <ToolCard
@@ -75,6 +171,9 @@ export default function HomePage({ onNavigate }) {
                     description="檢核樣品屋、短期展演場所、競選辦事處等臨時性建築物是否符合管理要點規定。"
                     onClick={() => onNavigate('temporary-building')}
                     colorClass="text-orange-600"
+                    isEnabled={isEnabled('temporary-building')}
+                    onToggle={() => toggleChecker('temporary-building')}
+                    status={getStatus('temporary-building')}
                 />
             </div>
 
