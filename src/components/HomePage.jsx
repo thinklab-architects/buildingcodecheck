@@ -36,7 +36,7 @@ const ToolCard = ({
     status
 }) => (
     <div
-        className={`glass-card relative overflow-hidden transition-all duration-300 ${isEnabled
+        className={`glass-card relative overflow-hidden transition-all duration-300 flex flex-col ${isEnabled
                 ? 'hover:scale-[1.02] hover:shadow-lg ring-1 ring-slate-200/50 bg-white/60'
                 : 'opacity-40 grayscale bg-slate-200/80 pointer-events-none'
             }`}
@@ -65,7 +65,7 @@ const ToolCard = ({
         {/* Card Content - Clickable Area */}
         <div
             onClick={isEnabled ? onClick : undefined}
-            className={`relative z-10 flex flex-col h-full p-6 ${isEnabled ? 'cursor-pointer group' : ''}`}
+            className={`relative z-10 flex flex-col flex-1 p-6 ${isEnabled ? 'cursor-pointer group' : ''}`}
         >
             <div className="flex justify-between items-start mb-4">
                 <div className={`p-3 rounded-xl bg-white/80 w-fit shadow-sm backdrop-blur-sm ${isEnabled ? colorClass : 'text-slate-400'}`}>
@@ -87,18 +87,24 @@ const ToolCard = ({
                 {description}
             </p>
 
-            <div className={`flex items-center text-sm font-semibold transition-colors ${isEnabled
-                    ? 'text-slate-700 group-hover:text-sky-600'
-                    : 'text-slate-400'
-                }`}>
-                {isEnabled ? (
-                    <>
-                        開始檢核
-                        <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
-                    </>
-                ) : (
-                    <span>未啟用</span>
-                )}
+            {/* ENTER Button Area */}
+            <div className="mt-auto pt-4 flex justify-end">
+                <button
+                    onClick={(e) => {
+                        if (isEnabled) {
+                            e.stopPropagation();
+                            onClick();
+                        }
+                    }}
+                    disabled={!isEnabled}
+                    className={`flex items-center gap-2 px-6 py-2 rounded-lg font-bold transition-all shadow-sm ${isEnabled
+                            ? 'bg-slate-800 text-white hover:bg-slate-700 hover:shadow-md active:scale-95'
+                            : 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                        }`}
+                >
+                    ENTER
+                    <ArrowRight size={18} />
+                </button>
             </div>
         </div>
     </div>
