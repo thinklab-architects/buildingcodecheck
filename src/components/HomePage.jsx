@@ -36,7 +36,7 @@ const ToolCard = ({
     status
 }) => (
     <div
-        className={`glass-card relative overflow-hidden transition-all duration-300 flex flex-col ${isEnabled
+        className={`glass-card relative overflow-hidden transition-all duration-300 flex flex-col h-full ${isEnabled
                 ? 'hover:scale-[1.02] hover:shadow-lg ring-1 ring-slate-200/50 bg-white/80'
                 : 'bg-gray-100 ring-1 ring-gray-200 pointer-events-none'
             }`}
@@ -134,7 +134,8 @@ export default function HomePage({ onNavigate, enabledCheckers, toggleChecker, c
                 </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Grid Layout - Enforcing 3 columns on medium screens and up */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <ToolCard
                     Icon={Building2}
                     title="屏東縣綠建築自治條例"
