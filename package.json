@@ -1,7 +1,7 @@
 {
   "name": "buildingcodecheck",
   "private": true,
-  "version": "0.2.6",
+  "version": "0.2.7",
   "homepage": "https://thinklab-architects.github.io/buildingcodecheck",
   "type": "module",
   "scripts": {
