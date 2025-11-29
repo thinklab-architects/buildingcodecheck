@@ -37,8 +37,8 @@ const ToolCard = ({
 }) => (
     <div
         className={`glass-card relative overflow-hidden transition-all duration-300 flex flex-col h-full ${isEnabled
-                ? 'hover:scale-[1.02] hover:shadow-lg ring-1 ring-slate-200/50 bg-white/80'
-                : 'bg-gray-100 ring-1 ring-gray-200 pointer-events-none'
+                ? 'hover:scale-[1.02] hover:shadow-xl ring-4 ring-orange-500 bg-white'
+                : 'bg-gray-100 ring-4 ring-gray-300 pointer-events-none'
             }`}
     >
         {/* Background Icon Decoration */}
