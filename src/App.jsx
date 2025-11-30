@@ -5,19 +5,21 @@ import TdrChecker from './components/TdrChecker';
 import CountyOddLotChecker from './components/CountyOddLotChecker';
 import IrregularSiteChecker from './components/IrregularSiteChecker';
 import TemporaryBuildingChecker from './components/TemporaryBuildingChecker';
+import ArcadeStandardChecker from './components/ArcadeStandardChecker';
 import HomePage from './components/HomePage';
 import { defaultBuildingData, checkGreenBuildingCompliance } from './utils/greenBuildingLogic';
 import { exampleTdrData, checkTdrCompliance } from './utils/pingtungTdrLogic';
 import { defaultLandCase, checkCountyOddLotCase } from './utils/countyOddLotLogic';
 import { defaultSite, checkPingtungIrregularLandRules } from './utils/irregularSiteLogic';
 import { defaultTemporaryBuilding, checkPingtungTemporaryBuilding } from './utils/temporaryBuildingLogic';
+import { defaultBuildingData as defaultArcadeData, checkCompliance as checkArcadeCompliance } from './utils/arcadeStandardLogic';
 
 function App() {
-  const [currentView, setCurrentView] = useState('home'); // 'home', 'green-building', 'tdr', 'county-odd-lot', 'irregular-site', 'temporary-building'
+  const [currentView, setCurrentView] = useState('home'); // 'home', 'green-building', 'tdr', 'county-odd-lot', 'irregular-site', 'temporary-building', 'arcade-standard'
 
   // Debug log for version check
   useEffect(() => {
-    console.log('Building Code Check v0.1.0 loaded');
+    console.log('Building Code Check v0.2.7 loaded');
   }, []);
 
   // State is lifted here to allow Header buttons to access it for Save/Export
@@ -26,6 +28,7 @@ function App() {
   const [countyOddLotData, setCountyOddLotData] = useState(defaultLandCase);
   const [irregularSiteData, setIrregularSiteData] = useState(defaultSite);
   const [temporaryBuildingData, setTemporaryBuildingData] = useState(defaultTemporaryBuilding);
+  const [arcadeStandardData, setArcadeStandardData] = useState(defaultArcadeData);
 
   // Track which checkers are enabled (checked on home page)
   const [enabledCheckers, setEnabledCheckers] = useState({
@@ -34,6 +37,7 @@ function App() {
     'county-odd-lot': true,
     'irregular-site': true,
     'temporary-building': true,
+    'arcade-standard': true
   });
 
   const toggleChecker = (id) => {
@@ -51,8 +55,9 @@ function App() {
       'county-odd-lot': checkCountyOddLotCase(countyOddLotData).isCompliant,
       'irregular-site': checkPingtungIrregularLandRules(irregularSiteData).isCompliant,
       'temporary-building': checkPingtungTemporaryBuilding(temporaryBuildingData).isCompliant,
+      'arcade-standard': checkArcadeCompliance(arcadeStandardData).isCompliant,
     };
-  }, [greenData, tdrData, countyOddLotData, irregularSiteData, temporaryBuildingData]);
+  }, [greenData, tdrData, countyOddLotData, irregularSiteData, temporaryBuildingData, arcadeStandardData]);
 
   // We also need to track results for export
   const [currentResults, setCurrentResults] = useState(null);
@@ -71,6 +76,7 @@ function App() {
     if (currentView === 'county-odd-lot') return countyOddLotData;
     if (currentView === 'irregular-site') return irregularSiteData;
     if (currentView === 'temporary-building') return temporaryBuildingData;
+    if (currentView === 'arcade-standard') return arcadeStandardData;
     return null;
   };
 
@@ -86,6 +92,7 @@ function App() {
           countyOddLotData,
           irregularSiteData,
           temporaryBuildingData,
+          arcadeStandardData,
           enabledCheckers
         }
       };
@@ -133,6 +140,7 @@ function App() {
           if (loaded.data.countyOddLotData) setCountyOddLotData(loaded.data.countyOddLotData);
           if (loaded.data.irregularSiteData) setIrregularSiteData(loaded.data.irregularSiteData);
           if (loaded.data.temporaryBuildingData) setTemporaryBuildingData(loaded.data.temporaryBuildingData);
+          if (loaded.data.arcadeStandardData) setArcadeStandardData(loaded.data.arcadeStandardData);
           if (loaded.data.enabledCheckers) setEnabledCheckers(loaded.data.enabledCheckers);
           alert("專案總檔讀取成功！");
           return;
@@ -154,6 +162,9 @@ function App() {
         } else if (loaded.type === 'temporary-building') {
           setTemporaryBuildingData(loaded.data);
           alert("臨時性建築物案件讀取成功！");
+        } else if (loaded.type === 'arcade-standard') {
+          setArcadeStandardData(loaded.data);
+          alert("法定騎樓案件讀取成功！");
         } else {
           // Fallback logic for old format
           if (loaded.sendOutParcels) {
@@ -168,6 +179,9 @@ function App() {
           } else if (loaded.locationCounty !== undefined && loaded.isTemporaryBuilding !== undefined) {
             setTemporaryBuildingData(loaded);
             alert("偵測為臨時性建築物資料，讀取成功！");
+          } else if (loaded.locationCounty !== undefined && loaded.frontArcadeWidth !== undefined) {
+            setArcadeStandardData(loaded);
+            alert("偵測為法定騎樓資料，讀取成功！");
           } else {
             setGreenData(loaded);
             alert("偵測為綠建築資料，讀取成功！");
@@ -261,6 +275,57 @@ function App() {
             onResultChange={setCurrentResults}
           />
         );
+      case 'arcade-standard':
+        return (
+          <ArcadeStandardChecker
+            onBack={() => setCurrentPage('home')} // Wait, handleNavigate is the function name
+          // Actually, the prop name in ArcadeStandardChecker is onBack
+          // And handleNavigate takes 'home'
+          />
+        );
+      default:
+        return (
+          <HomePage
+            onNavigate={handleNavigate}
+            enabledCheckers={enabledCheckers}
+            toggleChecker={toggleChecker}
+            checkerStatuses={checkerStatuses}
+          />
+        );
+    }
+  };
+
+  // Fix for renderCurrentView above: ArcadeStandardChecker needs to receive data and onChange if I want to lift state?
+  // In ArcadeStandardChecker.jsx I implemented local state: const [formData, setFormData] = useState(defaultBuildingData);
+  // But I should probably lift it to App.jsx to support Save/Load.
+  // Let's check ArcadeStandardChecker.jsx again.
+  // It uses local state. I should modify it to accept props or just leave it for now?
+  // The user asked to "add new chapter", implying integration.
+  // If I want Save/Load to work, I MUST lift state.
+  // So I will modify ArcadeStandardChecker.jsx to accept `data` and `onChange` props.
+  // But first let's write App.jsx. I will pass data and onChange to ArcadeStandardChecker.
+
+  const renderCurrentViewCorrected = () => {
+    switch (currentView) {
+      case 'green-building':
+        return <GreenBuildingChecker data={greenData} onChange={setGreenData} onResultChange={setCurrentResults} />;
+      case 'tdr':
+        return <TdrChecker data={tdrData} onChange={setTdrData} onResultChange={setCurrentResults} />;
+      case 'county-odd-lot':
+        return <CountyOddLotChecker data={countyOddLotData} onChange={setCountyOddLotData} onResultChange={setCurrentResults} />;
+      case 'irregular-site':
+        return <IrregularSiteChecker data={irregularSiteData} onChange={setIrregularSiteData} onResultChange={setCurrentResults} />;
+      case 'temporary-building':
+        return <TemporaryBuildingChecker data={temporaryBuildingData} onChange={setTemporaryBuildingData} onResultChange={setCurrentResults} />;
+      case 'arcade-standard':
+        return (
+          <ArcadeStandardChecker
+            onBack={() => handleNavigate('home')}
+            data={arcadeStandardData}
+            onChange={setArcadeStandardData}
+            onResultChange={setCurrentResults}
+          />
+        );
       default:
         return (
           <HomePage
@@ -280,6 +345,7 @@ function App() {
       case 'county-odd-lot': return '屏東縣縣有畸零地處理作業要點';
       case 'irregular-site': return '屏東縣畸零地使用規則';
       case 'temporary-building': return '屏東縣臨時性建築物管理要點';
+      case 'arcade-standard': return '屏東縣都市計畫區法定騎樓設置標準';
       default: return '建築法規自動化檢核系統';
     }
   };
@@ -349,7 +415,7 @@ function App() {
         </header>
 
         {/* Main Content */}
-        {renderCurrentView()}
+        {renderCurrentViewCorrected()}
 
         {/* Footer */}
         <footer className="app-footer">

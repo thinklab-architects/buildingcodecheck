@@ -1,5 +1,5 @@
 import React from 'react';
-import { Building2, Map, ArrowRight, LandPlot, Ruler, Construction, Check, AlertCircle, Circle } from 'lucide-react';
+import { Building2, Map, ArrowRight, LandPlot, Ruler, Construction, Check, AlertCircle, Circle, Store } from 'lucide-react';
 
 const StatusBadge = ({ isCompliant }) => {
     if (isCompliant === true) {
@@ -37,8 +37,8 @@ const ToolCard = ({
 }) => (
     <div
         className={`glass-card relative overflow-hidden transition-all duration-300 flex flex-col h-full ${isEnabled
-                ? 'hover:scale-[1.02] hover:shadow-xl ring-4 ring-orange-500 bg-white'
-                : 'bg-gray-100 ring-4 ring-gray-300 pointer-events-none'
+            ? 'hover:scale-[1.02] hover:shadow-xl ring-4 ring-orange-500 bg-white'
+            : 'bg-gray-100 ring-4 ring-gray-300 pointer-events-none'
             }`}
     >
         {/* Background Icon Decoration */}
@@ -57,8 +57,8 @@ const ToolCard = ({
                     onChange={onToggle}
                 />
                 <div className={`w-8 h-8 border-2 rounded-lg transition-all flex items-center justify-center shadow-sm ${isEnabled
-                        ? 'bg-white border-slate-300 peer-checked:bg-sky-600 peer-checked:border-sky-600 group-hover:border-sky-400'
-                        : 'bg-white border-gray-300'
+                    ? 'bg-white border-slate-300 peer-checked:bg-sky-600 peer-checked:border-sky-600 group-hover:border-sky-400'
+                    : 'bg-white border-gray-300'
                     }`}>
                     <Check size={20} className={`text-white transform transition-transform ${isEnabled ? 'scale-100' : 'scale-0'}`} />
                 </div>
@@ -72,8 +72,8 @@ const ToolCard = ({
         >
             <div className="flex justify-between items-start mb-4">
                 <div className={`p-3 rounded-xl w-fit shadow-sm backdrop-blur-sm transition-colors ${isEnabled
-                        ? `bg-white/80 ${colorClass}`
-                        : 'bg-gray-200 text-gray-400'
+                    ? `bg-white/80 ${colorClass}`
+                    : 'bg-gray-200 text-gray-400'
                     }`}>
                     <Icon size={32} />
                 </div>
@@ -106,8 +106,8 @@ const ToolCard = ({
                     }}
                     disabled={!isEnabled}
                     className={`flex items-center gap-2 px-6 py-2 rounded-lg font-bold transition-all shadow-sm ${isEnabled
-                            ? 'bg-slate-800 text-white hover:bg-slate-700 hover:shadow-md active:scale-95'
-                            : 'bg-gray-200 text-gray-300 cursor-not-allowed'
+                        ? 'bg-slate-800 text-white hover:bg-slate-700 hover:shadow-md active:scale-95'
+                        : 'bg-gray-200 text-gray-300 cursor-not-allowed'
                         }`}
                 >
                     ENTER
@@ -189,6 +189,17 @@ export default function HomePage({ onNavigate, enabledCheckers, toggleChecker, c
                     isEnabled={isEnabled('temporary-building')}
                     onToggle={() => toggleChecker('temporary-building')}
                     status={getStatus('temporary-building')}
+                />
+
+                <ToolCard
+                    Icon={Store}
+                    title="法定騎樓設置標準"
+                    description="檢核是否需設置騎樓或庇廊、退縮規定、騎樓寬度及構造等是否符合屏東縣都市計畫區法定騎樓設置標準。"
+                    onClick={() => onNavigate('arcade-standard')}
+                    colorClass="text-indigo-600"
+                    isEnabled={isEnabled('arcade-standard')}
+                    onToggle={() => toggleChecker('arcade-standard')}
+                    status={getStatus('arcade-standard')}
                 />
             </div>
 
